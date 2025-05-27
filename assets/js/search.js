@@ -1,108 +1,138 @@
 /* global lunr */
 (async () => {
-  const res  = await fetch('{{ "/_data/Curated_POMs.json" | relative_url }}');
-  const data = await res.json();                   // keyed by POM_ID
+  // -------------------------------------------------------------------------
+  // 1. Load dataset
+  // -------------------------------------------------------------------------
+  const res  = await fetch(window.POM_JSON_PATH);
+  const data = await res.json();                 // keys = POM_IDs
 
-  // --- 1. Prepare docs for lunr & collect filters --------------------------
-  const labelSet   = new Set();
-  const elementSet = new Set();
-  const docs       = [];
+  // -------------------------------------------------------------------------
+  // 2. Flatten records for Lunr + collect filter vocabularies
+  // -------------------------------------------------------------------------
+  const labels   = new Set();
+  const elements = new Set();
+  const docs     = [];
 
   for (const [id, d] of Object.entries(data)) {
-    // gather unique labels & elements
-    (d.Labels || []).forEach(l => labelSet.add(l));
-    Object.keys(d['Contains Elements']).forEach(el => elementSet.add(el));
+    (d.Labels || []).forEach(l => labels.add(l));
+    Object.keys(d["Contains Elements"]).forEach(e => elements.add(e));
 
     docs.push({
       id,
-      formula   : d['POM Formula'],
-      molecular : d['Molecular Formula'],
-      labels    : (d.Labels || []).join(' '),
-      elements  : Object.keys(d['Contains Elements']).join(' '),
+      formula   : d["POM Formula"],
+      molecular : d["Molecular Formula"],
+      labels    : (d.Labels || []).join(" "),
+      elements  : Object.keys(d["Contains Elements"]).join(" "),
+      mass      : parseFloat(d["Molecular Mass"]),
+      charge    : parseFloat(d["Charge"]),
       materials : Object
-        .values(d['POM Material'] || {})
-        .map(m => m['Material Formula'])
-        .join(' ')
+                   .values(d["POM Material Formula"] || {})
+                   .map(m => m["POM Material Formula"])
+                   .join(" ")
     });
   }
 
-  // --- 2. Build lunr index --------------------------------------------------
+  // -------------------------------------------------------------------------
+  // 3. Build Lunr index
+  // -------------------------------------------------------------------------
   const idx = lunr(function () {
-    this.ref('id');
-    this.field('formula',   { boost: 10 });
-    this.field('molecular');
-    this.field('labels');
-    this.field('elements');
-    this.field('materials');
+    this.ref("id");
+    this.field("formula",   { boost: 10 });
+    this.field("molecular");
+    this.field("labels");
+    this.field("elements");
+    this.field("materials");
 
     docs.forEach(doc => this.add(doc));
   });
 
-  // --- 3. Build filter UI ---------------------------------------------------
-  const buildToggles = (set, targetId, cssClass) => {
-    const wrap = document.getElementById(targetId);
+  // -------------------------------------------------------------------------
+  // 4. Build filter buttons
+  // -------------------------------------------------------------------------
+  function makeToggles(set, hostId, css) {
+    const host = document.getElementById(hostId);
     [...set].sort().forEach(val => {
-      const btn = document.createElement('button');
-      btn.textContent = val;
-      btn.dataset.value = val;
-      btn.className = cssClass;
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
-        runSearch();
-      });
-      wrap.appendChild(btn);
+      const b = document.createElement("button");
+      b.textContent  = val;
+      b.dataset.val  = val;
+      b.className    = css;
+      b.onclick = () => { b.classList.toggle("on"); run(); };
+      host.appendChild(b);
     });
-  };
-  buildToggles(labelSet,   'label-filters',   'label-btn');
-  buildToggles(elementSet, 'element-filters', 'element-btn');
+  }
+  makeToggles(labels,   "label-filters",   "lbl");
+  makeToggles(elements, "element-filters", "el");
 
-  const qInput = document.getElementById('q');
-  const list   = document.getElementById('results');
-  qInput.addEventListener('input', runSearch);
+  // -------------------------------------------------------------------------
+  // 5. Hook UI events
+  // -------------------------------------------------------------------------
+  const qIn      = document.getElementById("q");
+  const resList  = document.getElementById("results");
 
-  // --- 4. Search + filter ---------------------------------------------------
-  function runSearch () {
-    list.innerHTML = '';
-    const qStr = qInput.value.trim();
-    const labelON   = [...document.querySelectorAll('.label-btn.active')]
-                        .map(b => b.dataset.value);
-    const elementON = [...document.querySelectorAll('.element-btn.active')]
-                        .map(b => b.dataset.value);
+  ["input", "change"].forEach(ev => {
+    qIn.addEventListener(ev, run);
+    document.getElementById("mass-min").addEventListener(ev, run);
+    document.getElementById("mass-max").addEventListener(ev, run);
+    document.getElementById("charge-min").addEventListener(ev, run);
+    document.getElementById("charge-max").addEventListener(ev, run);
+  });
 
-    // start with either all docs or a lunr result set
-    let hits = qStr.length < 2
-      ? docs.map(d => ({ ref: d.id }))          // no query → every record
-      : idx.search(qStr);
+  // -------------------------------------------------------------------------
+  // 6. Search + filter
+  // -------------------------------------------------------------------------
+  function run () {
+    resList.innerHTML = "";
 
-    hits.forEach(hit => {
-      const d = data[hit.ref];
+    const query      = qIn.value.trim();
+    const massMin    = parseFloat(document.getElementById("mass-min").value);
+    const massMax    = parseFloat(document.getElementById("mass-max").value);
+    const chMin      = parseFloat(document.getElementById("charge-min").value);
+    const chMax      = parseFloat(document.getElementById("charge-max").value);
+    const lblON      = [...document.querySelectorAll(".lbl.on")].map(b => b.dataset.val);
+    const elON       = [...document.querySelectorAll(".el.on") ].map(b => b.dataset.val);
 
-      // mandatory label filter?
-      if (labelON.length && !labelON.some(l => d.Labels?.includes(l))) return;
-      // mandatory element filter?
-      if (elementON.length &&
-          !elementON.some(el => Object.keys(d['Contains Elements']).includes(el)))
-        return;
+    // base set: all docs or text-search subset
+    let hits = !query
+      ? docs.map(d => ({ ref: d.id }))
+      : idx.search(query);
 
-      // --- build result card ----------------------------------------------
-      const li = document.createElement('li');
+    hits.forEach(h => {
+      const d = data[h.ref];
+
+      // label filter
+      if (lblON.length && !lblON.some(l => d.Labels?.includes(l))) return;
+      // element filter
+      if (elON.length && !elON.some(e => d["Contains Elements"][e])) return;
+      // mass filter
+      const mass = parseFloat(d["Molecular Mass"]);
+      if (!isNaN(massMin) && mass < massMin) return;
+      if (!isNaN(massMax) && mass > massMax) return;
+      // charge filter
+      const ch = parseFloat(d["Charge"]);
+      if (!isNaN(chMin) && ch < chMin) return;
+      if (!isNaN(chMax) && ch > chMax) return;
+
+      // ---- render card -----------------------------------------------------
+      const li = document.createElement("li");
       li.innerHTML = `
-        <strong>${d['POM Formula']}</strong>
-        <small>${hit.ref}</small><br/>
-        ${d['Molecular Mass']} amu &nbsp; charge ${d.Charge}<br/>
-        <em>${(d.Labels || []).join(', ')}</em><br/>
-        ${Object.values(d['POM Material'] || {})
-                 .map(m => `<a href="https://doi.org/${m.DOI}" target="_blank">${m['Material Formula']}</a>`)
-                 .join('<br/>')}
+        <strong>${d["POM Formula"]}</strong>
+        <small>(${h.ref})</small><br>
+        ${mass.toFixed(3)} amu &nbsp; charge ${ch}<br>
+        <em>${(d.Labels || []).join(", ")}</em><br>
+        ${
+          Object.values(d["POM Material Formula"] || {})
+                .map(m => `<a href="https://doi.org/${m.DOI}" target="_blank">${m["POM Material Formula"]}</a>`)
+                .join("<br>")
+        }
       `;
-      list.appendChild(li);
+      resList.appendChild(li);
     });
 
-    if (!list.childElementCount) {
-      list.innerHTML = '<li><em>No matches.</em></li>';
+    if (!resList.childElementCount) {
+      resList.innerHTML = "<li><em>No matches.</em></li>";
     }
   }
 
-  // initial render (shows everything)
-  runSearch();
+  // initial load
+  run();
 })();
