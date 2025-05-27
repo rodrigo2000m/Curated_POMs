@@ -5,7 +5,7 @@ title: Search
 
 <h2>Search the Curated-POM database</h2>
 
-<input id="q" type="search" placeholder="e.g. Wells-Dawson, V2O6, tungstate">
+<input id="q" type="search" placeholder="e.g. V2O6, tungstate, 159.9">
 
 <section id="filters">
   <details open>
@@ -19,27 +19,37 @@ title: Search
   </details>
 
   <details>
-    <summary><strong>Molecular mass range</strong> (amu)</summary>
-    <input id="mass-min" type="number" placeholder="min" step="0.001">
-    —
+    <summary><strong>Molecular-mass range (amu)</strong></summary>
+    <input id="mass-min" type="number" placeholder="min" step="0.001"> —
     <input id="mass-max" type="number" placeholder="max" step="0.001">
   </details>
 
   <details>
     <summary><strong>Charge range</strong></summary>
-    <input id="charge-min" type="number" placeholder="min">
-    —
+    <input id="charge-min" type="number" placeholder="min"> —
     <input id="charge-max" type="number" placeholder="max">
   </details>
 </section>
 
 <hr>
 
-<ul id="results"></ul>
+<table id="results" class="sortable">
+  <thead>
+    <tr>
+      <th>POM ID</th>
+      <th>POM Formula</th>
+      <th>Mass / amu</th>
+      <th>Charge</th>
+      <th>Labels</th>
+      <th>Materials (DOI)</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <!-- libs -->
 <script src="https://cdn.jsdelivr.net/npm/lunr/lunr.min.js"></script>
 
-<!-- make JSON path available to JS -->
+<!-- pass JSON path to JS -->
 <script>window.POM_JSON_PATH = '{{ "/_data/Curated_POMs.json" | relative_url }}';</script>
 <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
