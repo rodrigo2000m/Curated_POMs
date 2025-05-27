@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title | default: site.title | default: "Curated POMs" }}</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
 
-  <body>
-    <header>
-      <h1><a href="{{ '/' | relative_url }}">{{ site.title | default: "Curated POMs" }}</a></h1>
-    </header>
+<body>
+  <header>
+    <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+    <nav>
+      <a href="{{ '/search.html' | relative_url }}">Search</a>
+    </nav>
+  </header>
 
-    <main>
-      {{ content }}
-    </main>
+  <main>
+    {{ content }}
+  </main>
 
-    <footer>
-      <p>© {{ site.time | date: "%Y" }} Curated Polyoxometalate Dataset</p>
-    </footer>
-  </body>
+  <footer>
+    © {{ site.time | date: '%Y' }} Curated Polyoxometalate Dataset
+  </footer>
+</body>
 </html>
