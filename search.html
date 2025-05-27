@@ -1,9 +1,45 @@
+---
+layout: default
+title: Search
+---
+
+<h2>Search the Curated-POM database</h2>
+
+<input id="q" type="search" placeholder="e.g. Wells-Dawson, V2O6, tungstate">
+
+<section id="filters">
+  <details open>
+    <summary><strong>Filter by label</strong></summary>
+    <div id="label-filters"></div>
+  </details>
+
+  <details>
+    <summary><strong>Contains element</strong></summary>
+    <div id="element-filters"></div>
+  </details>
+
+  <details>
+    <summary><strong>Molecular mass range</strong> (amu)</summary>
+    <input id="mass-min" type="number" placeholder="min" step="0.001">
+    —
+    <input id="mass-max" type="number" placeholder="max" step="0.001">
+  </details>
+
+  <details>
+    <summary><strong>Charge range</strong></summary>
+    <input id="charge-min" type="number" placeholder="min">
+    —
+    <input id="charge-max" type="number" placeholder="max">
+  </details>
+</section>
+
+<hr>
+
+<ul id="results"></ul>
+
+<!-- libs -->
 <script src="https://cdn.jsdelivr.net/npm/lunr/lunr.min.js"></script>
 
-<script>
-/* global lunr */
-(async () => {
-  const res  = await fetch('{{ "/_data/Curated_POMs.json" | relative_url }}');
-  // … rest of the code exactly the same …
-})();
-</script>
+<!-- make JSON path available to JS -->
+<script>window.POM_JSON_PATH = '{{ "/_data/Curated_POMs.json" | relative_url }}';</script>
+<script src="{{ '/assets/js/search.js' | relative_url }}"></script>
