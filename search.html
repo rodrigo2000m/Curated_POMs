@@ -1,11 +1,19 @@
----
-layout: default
-title: Curated Polyoxometalate Database
----
+<h1>Search the Curated-POM database</h1>
 
-Welcome to the curated **Polyoxometalate (POM)** dataset.
+<input id="q" type="search" placeholder="Try: Wells-Dawson, O62, tungstate" />
 
-* 👉 [Search the database]({{ '/search.html' | relative_url }})
-* 📄 [Download the raw JSON]({{ '/_data/Curated_POMs.json' | relative_url }})
+<!-- filters -->
+<section id="filters">
+  <h2>Filter by label</h2>
+  <div id="label-filters"></div>
 
-Contributions and pull-requests are welcome!
+  <h2>Contains element</h2>
+  <div id="element-filters"></div>
+</section>
+
+<hr/>
+
+<ul id="results"></ul>
+
+<script src="https://cdn.jsdelivr.net/npm/lunr/lunr.min.js"></script>
+<script src="{{ '/assets/js/search.js' | relative_url }}"></script>
