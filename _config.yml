@@ -1,11 +1,22 @@
-title: Curated POMs
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-# The whole site lives at /Curated_POMs/  ➜   ALWAYS start with a slash
-baseurl: "/Curated_POMs"
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-# Tell Jekyll to export the JSON so browsers can fetch it
-defaults:
-  - scope:
-      path: "_data/Curated_POMs.json"
-    values:
-      permalink: /_data/:basename:output_ext
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      # ►►►  NEW STEP — copy the JSON into the built site  ◄◄◄
+      - name: Copy data file to site root
+        run: cp _data/Curated_POMs.json _site/Curated_POMs.json
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
