@@ -1,7 +1,7 @@
 /* global lunr */
 (async () => {
   // 1 ─ fetch dataset --------------------------------------------------------
-  const res  = await fetch(window.POM_JSON_PATH);
+  const res = await fetch(window.POM_JSON_PATH);
   const data = await res.json();
 
   // 2 ─ flatten records + collect filter vocab ------------------------------
