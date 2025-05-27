@@ -1,0 +1,5 @@
+defaults:
+  - scope:
+      path: "_data/Curated_POMs.json"
+    values:
+      permalink: /_data/:basename:output_ext      # keeps the file downloadable
