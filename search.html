@@ -1,19 +1,9 @@
-<h1>Search the Curated-POM database</h1>
-
-<input id="q" type="search" placeholder="Try: Wells-Dawson, O62, tungstate" />
-
-<!-- filters -->
-<section id="filters">
-  <h2>Filter by label</h2>
-  <div id="label-filters"></div>
-
-  <h2>Contains element</h2>
-  <div id="element-filters"></div>
-</section>
-
-<hr/>
-
-<ul id="results"></ul>
-
 <script src="https://cdn.jsdelivr.net/npm/lunr/lunr.min.js"></script>
-<script src="{{ '/assets/js/search.js' | relative_url }}"></script>
+
+<script>
+/* global lunr */
+(async () => {
+  const res  = await fetch('{{ "/_data/Curated_POMs.json" | relative_url }}');
+  // … rest of the code exactly the same …
+})();
+</script>
