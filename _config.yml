@@ -1,2 +1,11 @@
 title: Curated POMs
-baseurl: "/Curated_POMs"   # ← DON’T forget the leading slash
+
+# The whole site lives at /Curated_POMs/  ➜   ALWAYS start with a slash
+baseurl: "/Curated_POMs"
+
+# Tell Jekyll to export the JSON so browsers can fetch it
+defaults:
+  - scope:
+      path: "_data/Curated_POMs.json"
+    values:
+      permalink: /_data/:basename:output_ext
