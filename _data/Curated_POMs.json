@@ -1,6 +1,6 @@
 {
     "POM_XIFU": {
-        "POM Formula": "[VO3]−",
+        "POM Formula": "[VO3]3−",
         "Molecular Formula": "O3V",
         "Contains Elements": {
             "O": 3,
@@ -19,32 +19,35 @@
         }
     },
     "POM_QASU": {
-        "POM Formula": "[MoO4]2−",
-        "Molecular Formula": "MoO4",
+        "POM Formula": "[Mo6O22]8−",
+        "Molecular Formula": "Mo6O22",
         "Contains Elements": {
-            "Mo": 1,
-            "O": 4
+            "Mo": 6,
+            "O": 22
         },
-        "Molecular Mass": "159.946",
-        "Charge": -2.0,
+        "Molecular Mass": "927.618",
+        "Charge": -8.0,
         "Labels": [
             "Polyoxomolybdate"
         ],
         "POM Material Formula": {
             "98cacf35-f0f8-4057-ac3e-e0cfc67250f9": {
-                "POM Material Formula": "[Ag20(C≡CtBu)13(CF3COO)5(MoO4)]",
+                "POM Material Formula": "[Ag60(Mo6O22)2(ButC≡C)38](CF3SO3)6",
                 "DOI": "10.1021/acs.accounts.5b00007"
             }
         }
     },
     "POM_BIVU": {
-        "POM Formula": "[V2O6]2−",
-        "Molecular Formula": "O6V2",
-        "Contains Elements": {
-            "O": 6,
-            "V": 2
+        "POM Formula": "[(tBuPO3)4V4O8]2−",
+       "Molecular Formula": "(tBuPO3)4V4O8",
+  "Contains Elements": {
+    "C": 16,
+    "H": 36,
+    "P": 4,
+    "O": 20,
+    "V": 4
         },
-        "Molecular Mass": "197.877",
+        "Molecular Mass": "876.090",
         "Charge": -2.0,
         "Labels": [
             "Polyoxovanadate"
@@ -57,13 +60,13 @@
         }
     },
     "POM_CUSU": {
-        "POM Formula": "[V2O6]4−",
-        "Molecular Formula": "O6V2",
+        "POM Formula": "[(O2)V2O6]4−",
+        "Molecular Formula": "O8V2",
         "Contains Elements": {
             "O": 6,
             "V": 2
         },
-        "Molecular Mass": "197.877",
+        "Molecular Mass": "229.880",
         "Charge": -4.0,
         "Labels": [
             "Polyoxovanadate"
@@ -71,7 +74,7 @@
         "POM Material Formula": {
             "2f5162f9-e877-40cb-93d5-7819a06722a6": {
                 "POM Material Formula": "Ag4(C2)(V2O6)·0.5H2O",
-                "DOI": "10.1021/acs.inorgchem.9b00264"
+                "DOI": "10.1021/ja1112035"
             }
         }
     },
@@ -90,26 +93,26 @@
         "POM Material Formula": {
             "a58d5a3a-0149-4097-ae62-3fa5a1e54909": {
                 "POM Material Formula": "[V2O7@Ag24(tBuC≡C)14(hfac)6]",
-                "DOI": "10.1002/chem.201705906"
+                "DOI": "10.1039/C8CE00243F"
             }
         }
     },
     "POM_QIYE": {
-        "POM Formula": "[V2O7]6−",
+        "POM Formula": "[V2O7]4−",
         "Molecular Formula": "O7V2",
         "Contains Elements": {
             "O": 7,
             "V": 2
         },
         "Molecular Mass": "213.876",
-        "Charge": -6.0,
+        "Charge": -4.0,
         "Labels": [
             "Polyoxovanadate"
         ],
         "POM Material Formula": {
             "99f5186f-3af9-46b8-a09d-7abfb5d2e2be": {
-                "POM Material Formula": "[Ag24(C≡CtBu)14(CF3COO)6(V2O7)]·2CH3OH",
-                "DOI": "10.1021/acs.accounts.5b00007"
+                "POM Material Formula": "[V2O7@Ag24(C≡CtBu)14(tfa)6]0·2MeOH",
+                "DOI": " 10.1080/14686996.2023.2203832"
             }
         }
     },
